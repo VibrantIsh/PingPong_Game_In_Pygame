@@ -8,6 +8,7 @@ WIDTH, HEIGHT = 1000, 600
 wn = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("PING-PONG")
 run = True
+player_1 = player_2 = 0
 directions = [-1, 1]  # -1 for left, 1 for right
 angle = [0, 1, 2]
 
@@ -136,6 +137,7 @@ while run:
     if ball_y <= 0 + radius or ball_y >= HEIGHT - radius:
         ball_val_y *= -1
     if ball_x >= WIDTH - radius:  # if the ball has hit the right edge
+        player_1 += 1
         ball_x, ball_y = WIDTH / 2 - radius, HEIGHT / 2 - radius
         dir = random.choice(directions)
         ang = random.choice(angle)
@@ -153,6 +155,7 @@ while run:
             ball_val_y = random.uniform(-0.5, 0.5)
 
     if ball_x <= 0 + radius:  # if the ball has hit the left edge
+        player_2 += 1
         ball_x, ball_y = WIDTH / 2 - radius, HEIGHT / 2 - radius
         dir = random.choice(directions)
         ang = random.choice(angle)
@@ -169,6 +172,23 @@ while run:
         else:
             ball_val_y = random.uniform(-0.5, 0.5)
 
+#-----------------------------scoreboard------------------------------
+
+    font = pygame.font.SysFont('callibri', 32)
+
+    score_1 = font.render("Points: " +str(player_1), True, WHITE)
+    wn.blit(score_1, (25, 25))
+
+    score_2 = font.render("Points: " +str(player_2), True, WHITE)
+    wn.blit(score_2, (825, 25))
+
+    gad_left_1 = font.render("Powers Left: "+ str(left_gadget_remaining), True, WHITE)
+    wn.blit(gad_left_1, (25, 65))
+
+    gad_left_2 = font.render("Powers Left: "+ str(right_gadget_remaining), True, WHITE)
+    wn.blit(gad_left_1, (825, 65))
+#------------------------------------------------------------------------
+
     # Objects
     pygame.draw.circle(wn, VIOLET, (int(ball_x), int(ball_y)), radius)
     pygame.draw.rect(wn, LUSH_TEAL, pygame.Rect(int(left_paddle_x), int(left_paddle_y), paddle_width, paddle_height))
@@ -178,12 +198,20 @@ while run:
     if right_gadget ==1:
         pygame.draw.circle(wn, WHITE, (right_paddle_x + 10, right_paddle_y + 10), 4)
 
+
+    #Endscreen
+    winning_font = pygame.font.SysFont('callibri', 100)
+    
+    if player_1 >= 5:
+        wn.fill(BACKGROUND_COLOR)
+        endscreen = winning_font.render("PLAYER 1 WON 🤾‍♀️", True, WHITE)
+        wn.blit(endscreen, (200, 250))
+
+    if player_2 >= 5:
+        wn.fill(BACKGROUND_COLOR)
+        endscreen = winning_font.render("PLAYER 2 WON 🏂", True, WHITE)
+        wn.blit(endscreen, (200, 250))
     pygame.display.update()
 
 
 
-
-    pygame.draw.rect(wn, LUSH_TEAL, pygame.Rect(int(left_paddle_x), int(left_paddle_y), paddle_width, paddle_height))
-    pygame.draw.rect(wn, LUSH_TEAL, pygame.Rect(int(right_paddle_x), int(right_paddle_y), paddle_width, paddle_height))
-
-    pygame.display.update()
